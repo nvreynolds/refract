@@ -1,6 +1,6 @@
 require 'spidr'
 
-class FactoryBro
+class Refract
   def self.create(homePage)
     system 'mkdir', '-p', 'page_objects' unless File.directory?(Dir.pwd+"/page_objects")
 
