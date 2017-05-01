@@ -1,7 +1,7 @@
 require 'spidr'
 
 class FactoryBro
-  def self.create_files(homePage)
+  def self.create(homePage)
     system 'mkdir', '-p', 'page_objects' unless File.directory?(Dir.pwd+"/page_objects")
 
     Spidr.site(homePage) do |spider|
@@ -24,6 +24,8 @@ class FactoryBro
       end
     end
   end
+
+  private
 
   def self.base_page_object_content(url, className, elements)
     "module App
