@@ -1,0 +1,9 @@
+*.swp
+refract-*.gem
+.bundle
+tmp
+bin
+*~
+.DS_Store
+page_objects
+build.sh

@@ -1,28 +1,21 @@
 require 'spidr'
 
-
-require 'pry'
-
-
-
+class FactoryBro
   def self.create_files(homePage)
     system 'mkdir', '-p', 'page_objects' unless File.directory?(Dir.pwd+"/page_objects")
 
-
-
-    Spidr.site('http://www.seleniumframework.com/Practiceform/') do |spider|
+    Spidr.site(homePage) do |spider|
       spider.every_html_page do |page|
-        fileName = page.title.downcase.gsub(' ', "_")
-        className = page.title.gsub(' ', '')
+        fileName = page.title.downcase.gsub(' ', "_").delete('|')
+        className = page.title.gsub(' ', '').delete('|')
         body = page.doc.to_s
         idElements=body.scan(/\id="(.*?)"/).flatten
         nameElements=body.scan(/\name="(.*?)"/).flatten
         dataTestElements=body.scan(/\data-test="(.*?)"/).flatten
-
         url = page.url.to_s.partition('.com').last
         elements = element_formatter('id', idElements)
-                  + element_formatter('name', nameElements)
-                  + element_formatter('data-test', dataTestElements)
+        elements += element_formatter('name', nameElements)
+        elements += element_formatter('data-test', dataTestElements)
 
         path = File.join(Dir.pwd, 'page_objects', "#{fileName}.rb")
         unless File.exists?(path)
@@ -32,26 +25,22 @@ require 'pry'
     end
   end
 
-
-
   def self.base_page_object_content(url, className, elements)
     "module App
   class #{className} < SitePrism::Page
     set_url '#{url}'
     #fix regex set_url_matcher //
-    # element :email, "input[name='email']"
-    #{elements}
+#{elements}
   end
 end
 "
   end
 
-
-  def element_formatter(identifier, elementArray)
+  def self.element_formatter(identifier, elementArray)
     elements = ''
     elementArray.each do |e|
-      elements += "element :#{e}, " + '"' + "input[#{identifier}=" + "'#{e}']" + '"' + "\n"
+      elements += "    element :#{e}, " + '"' + "[#{identifier}=" + "'#{e}']" + '"' + "\n"
     end
+    elements
   end
-
 end
