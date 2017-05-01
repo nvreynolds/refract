@@ -7,4 +7,4 @@
 3. `Refract.create('https://example.com')`
 
 ### New pages added?
-1. Just re-run at any time `Refract.create('https://example.com')`
+1. Re-run at any time `Refract.create('https://example.com')`
