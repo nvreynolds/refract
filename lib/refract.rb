@@ -6,7 +6,11 @@ class Refract
 
     Spidr.site(homePage) do |spider|
       spider.every_html_page do |page|
-        fileName = page.title.downcase.gsub(' ', "_").delete('|')
+        if page.title
+          fileName = page.title.downcase.gsub(' ', "_").delete('|')
+        else
+          filename = "unknown_page_#{Time.now.to_f.to_s.sub('.', '_')}"
+        end
         className = page.title.gsub(' ', '').delete('|')
         body = page.doc.to_s
         idElements=body.scan(/\id="(.*?)"/).flatten
