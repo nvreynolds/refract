@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'refract'
-  s.version     = '0.0.0'
-  s.date        = '2017-04-30'
+  s.version     = '0.0.1'
+  s.date        = '2019-01-05'
   s.summary     = "Refract"
   s.description = "Crawler that auto generates SitePrism Page Objects"
   s.authors     = ["Nate Reynolds"]
