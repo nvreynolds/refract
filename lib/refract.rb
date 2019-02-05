@@ -7,23 +7,27 @@ class Refract
     Spidr.site(homePage) do |spider|
       spider.every_html_page do |page|
         if page.title
-          fileName = page.title.downcase.gsub(' ', "_").delete('|')
+          pageTitle = page.title.downcase.gsub(' ', "_").delete('|')
         else
-          filename = "unknown_page_#{Time.now.to_f.to_s.sub('.', '_')}"
+          pageTitle = "unknown_page_#{Time.now.to_f.to_s.sub('.', '_')}"
         end
-        className = page.title.gsub(' ', '').delete('|')
-        body = page.doc.to_s
-        idElements=body.scan(/\id="(.*?)"/).flatten
-        nameElements=body.scan(/\name="(.*?)"/).flatten
-        dataTestElements=body.scan(/\data-test="(.*?)"/).flatten
-        url = page.url.to_s.partition('.com').last
-        elements = element_formatter('id', idElements)
-        elements += element_formatter('name', nameElements)
-        elements += element_formatter('data-test', dataTestElements)
-
-        path = File.join(Dir.pwd, 'page_objects', "#{fileName}.rb")
-        unless File.exists?(path)
-          File.open(path, 'w') {|file| file.write(base_page_object_content(url, className, elements)) }
+        fileName = pageTitle
+        className = pageTitle.gsub(' ', '').delete('|')
+        begin
+          body = page.doc.to_s
+          idElements=body.scan(/\id="(.*?)"/).flatten
+          nameElements=body.scan(/\name="(.*?)"/).flatten
+          dataTestElements=body.scan(/\data-test="(.*?)"/).flatten
+          url = page.url.to_s.partition('.com').last
+          elements = element_formatter('id', idElements)
+          elements += element_formatter('name', nameElements)
+          elements += element_formatter('data-test', dataTestElements)
+          path = File.join(Dir.pwd, 'page_objects', "#{fileName}.rb")
+          unless File.exists?(path)
+            File.open(path, 'w') {|file| file.write(base_page_object_content(url, className, elements)) }
+          end
+        rescue
+          puts "page object not created for #{page.url}"
         end
       end
     end
